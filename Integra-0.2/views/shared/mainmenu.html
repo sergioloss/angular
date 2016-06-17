@@ -1,32 +1,46 @@
-<div ng-cloak>
-    <md-toolbar class="md-menu-toolbar">
-        <div layut="row">
-            <md-toolbar-filler layout layout-align="center center">
-                <md-icon md-svg-icon="call:chat"></md-icon>
-            </md-toolbar-filler>
-            <div>
-                <md-menu-bar>
-                    <md-menu>
-                        <button ng-click="$mdOpenMenu()">
-                            Sistema
-                        </button>
-                        <md-menu-content>
-                            <md-menu-item>
-                                <md-buttom type="buttom" ng-click="mainMenu.sampleAction('config', $event)">
-                                    Config
-                                </md-buttom>
-                            </md-menu-item>
-                            <md-menu-divider></md-menu-divider>
-                            <md-menu-item>
-                                <md-buttom type="buttom" ng-click="mainMenu.sampleAction('logout', $event)">
-                                    Logout
-                                </md-buttom>
-                            </md-menu-item>
-                        </md-menu-content>                        
-                    </md-menu>
-                </md-menu-bar>
-            </div>
+<md-toolbar class="md-menu-toolbar">
+    <div layout="row">
+        <md-toolbar-filler layout layout-align="center center">
+            <md-icon md-svg-icon="call:chat"></md-icon>
+        </md-toolbar-filler>
+        <div>
+            <md-menu-bar>
+                <md-menu>
+                    <button ng-click="$mdOpenMenu()">
+                        Sistema
+                    </button>
+                    <md-menu-content>
+                        <md-menu-item>
+                            <md-button ng-click="mainMenu.sampleAction('Config', $event)">
+                                Config
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-divider></md-menu-divider>
+                        <md-menu-item>
+                            <md-button ng-click="mainMenu.sampleAction('Logout', $event)">
+                                Logout
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+                <md-menu>
+                    <button ng-click="$mdOpenMenu()">
+                        Cadastro
+                    </button>
+                    <md-menu-content>
+                        <md-menu-item>
+                            <md-button ng-click="mainMenu.sampleAction('Integradores', $event)">
+                                Integradores
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="mainMenu.sampleAction('Clientes', $event)">
+                                Clientes
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </md-menu-bar>
         </div>
-    </md-toolbar>
-</div>
-
+    </div>
+</md-toolbar>
