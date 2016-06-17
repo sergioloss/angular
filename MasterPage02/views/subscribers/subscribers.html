@@ -1,0 +1,12 @@
+<h2>Subscribers</h2>
+
+<ul>
+	<li ng-repeat="subscriber in subscribers">
+		
+		<a ui-sref=".detail({id: subscriber.id})" > {{subscriber.name}}</a>
+		{{subscriber.email}}		
+
+	</li>
+</ul>
+
+<div ui-view="detail"></div>
