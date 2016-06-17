@@ -1,2 +1,2 @@
 # angular
-angular.js projects
+This is a repository for angular.js projects.
