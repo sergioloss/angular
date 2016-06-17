@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="Integra-0.1" ng-controller="mainController">
+<head>
+    <meta charset="utf-8" />
+    <title>{{ Page.Title() }}</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <!--[if lt IE 9]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+    <style type="text/css">
+        header, section, footer, aside, nav, article, figure, audio, video, canvas  { display:block; }
+    </style>
+    <link rel="stylesheet" type="text/css" href="/content/main.css" />
+    <link rel="stylesheet" type="text/css" href="/content/angular-material.css" />
+</head>
+<body>
+    <div id="div-container">
+        <header>
+            <div ui-view="header" id="div-header"></div>
+            <div ui-view="main-menu" id="div-main-menu"></div>
+        </header>
+        <nav>
+            <div ui-view="nav" id="div-nav">Nav</div>
+        </nav>
+        <section id="content">
+            <div ui-view="content" id="div-content">Content</div>
+        </section>
+        <footer>
+            <div ui-view="footer" id="div-footer">Footer</div>
+        </footer>
+    </div>   
+    
+    <!-- scripts -->
+    <script src="scripts/angular.js"></script>
+    <script src="scripts/underscore.js"></script>
+    <script src="scripts/angular-ui-router.js"></script>
+
+    <script src="scripts/angular-animate.js"></script>
+    <script src="scripts/angular-aria.js"></script>
+    <script src="scripts/angular-messages.js"></script>
+    <script src="scripts/angular-material.js"></script>
+
+    <!-- scripts-controllers -->
+    <script src="scripts/main.js"></script>
+    <script src="controllers/HomeController.js"></script>
+    <script src="controllers/MainMenuController.js"></script>
+    <script src="controllers/IntegratorsController.js"></script>
+    
+</body>
+</html>

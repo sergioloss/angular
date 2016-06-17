@@ -1,0 +1,11 @@
+<h2>{{ viewTitle }}</h2>
+
+<div class="div-sidebar">
+    <ul>
+        <li ng-repeat="integrator in integrators">
+            <a ui-sref=".detail({id: integrator.id})" >{{ integrator.id + " - " + integrator.name }}</a>
+        </li>
+    </ul>
+</div>
+
+<div ui-view="detail" class="div-integrator-detail"></div>
