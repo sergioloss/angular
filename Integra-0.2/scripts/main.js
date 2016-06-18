@@ -5,8 +5,12 @@ var app = angular.module('Integra-0.1', ['ui.router', 'ngMaterial', 'ngMessages'
 app.config([
     '$stateProvider',
     '$urlRouterProvider',
+    '$locationProvider',
     '$mdIconProvider',
-    function ($stateProvider, $urlRouterProvider, $mdIconProvider) {
+    function ($stateProvider, $urlRouterProvider, $locationProvider, $mdIconProvider) {
+        
+        // $locationProvider.html5Mode(true);
+        
         // default route
         $urlRouterProvider.otherwise('/');
         
@@ -67,7 +71,7 @@ app.controller('mainController', ['$scope', 'Page', function ($scope, Page) {
     $scope.Page = Page;
 }]);
 
-app.factory('Page', function () {
+app.factory('Page', function ($location) {
     var title = 'Integra-0.1';
     
     return {
@@ -76,6 +80,9 @@ app.factory('Page', function () {
         },
         SetTitle: function (newTitle) {
             title = newTitle;
+        },
+        Path: function () {
+            return $location.path();
         }
     };
 });

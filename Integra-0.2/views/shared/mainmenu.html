@@ -11,6 +11,12 @@
                     </button>
                     <md-menu-content>
                         <md-menu-item>
+                            <md-button ng-click="mainMenu.changeView('/')">
+                                In&iacute;cio (Home)                                
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-divider></md-menu-divider>
+                        <md-menu-item>
                             <md-button ng-click="mainMenu.sampleAction('Config', $event)">
                                 Config
                             </md-button>
@@ -29,7 +35,7 @@
                     </button>
                     <md-menu-content>
                         <md-menu-item>
-                            <md-button ng-click="mainMenu.sampleAction('Integradores', $event)">
+                            <md-button ng-click="mainMenu.changeView('integradores')">
                                 Integradores
                             </md-button>
                         </md-menu-item>

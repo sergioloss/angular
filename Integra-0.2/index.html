@@ -18,12 +18,13 @@
     <div id="div-container">
         <header>
             <div ui-view="header" id="div-header"></div>
-            <div ui-view="main-menu"></div>
+            <div ui-view="main-menu" id="main-menu"></div>
         </header>
-        <nav>
-            <div ui-view="nav" id="div-nav">Nav</div>
+        <nav>            
+            <div ui-view="nav" id="div-nav"></div>
         </nav>
         <section id="content">
+            <h2>{{ Page.Title() }}</h2>
             <div ui-view="content" id="div-content">Content</div>
         </section>
         <footer>

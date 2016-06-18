@@ -1,6 +1,11 @@
 'use strict';
 
-app.controller('MainMenuController', ['$mdDialog', function ($mdDialog) {
+app.controller('MainMenuController', ['$scope', '$mdDialog', '$location', function ($scope, $mdDialog, $location) {
+
+    this.changeView = function(view) {
+        $location.path(view); 
+    }
+    
     this.sampleAction = function(name, ev) {
         $mdDialog.show($mdDialog.alert()
             .title(name)
@@ -9,5 +14,6 @@ app.controller('MainMenuController', ['$mdDialog', function ($mdDialog) {
             .targetEvent(ev)
         );
     };
+    
 }]);
 
