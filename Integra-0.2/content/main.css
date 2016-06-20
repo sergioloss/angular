@@ -23,9 +23,10 @@
 }
 
 #div-content {
-    /*border: solid 1px red;*/
+    border: solid 1px red;
     display: table;
     min-height: 400px;
+    width: 100%;
 }
 
 #div-content ul {
@@ -67,7 +68,16 @@
 
 
 /* ---------
- * Main Menu
+ * Login view
  * ---------
  */
 
+.loginBox {
+    max-width: 90%;
+    width: 350px;
+    margin: auto;
+}
+
+.stretch input  {
+  width: 100%
+}

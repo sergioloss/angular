@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title>{{ Page.Title() }}</title>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <!--script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script-->
     <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -24,7 +24,7 @@
             <div ui-view="nav" id="div-nav"></div>
         </nav>
         <section id="content">
-            <h2>{{ Page.Title() }}</h2>
+            <h2>{{ Page.Subtititle() }}</h2>
             <div ui-view="content" id="div-content">Content</div>
         </section>
         <footer>
@@ -36,17 +36,23 @@
     <script src="scripts/angular.js"></script>
     <script src="scripts/angular-ui-router.js"></script>
     <script src="scripts/underscore.js"></script>
-
     <script src="scripts/angular-messages.js"></script>
     <script src="scripts/angular-aria.js"></script>
     <script src="scripts/angular-animate.js"></script>
     <script src="scripts/angular-material.js"></script>
+    
+    <script src="scripts/ngStorage.js"></script>
 
     <!-- scripts-controllers -->
     <script src="scripts/main.js"></script>
+    <script src="controllers/AuthenticationController.js"></script>
     <script src="controllers/HomeController.js"></script>
     <script src="controllers/MainMenuController.js"></script>
     <script src="controllers/IntegratorsController.js"></script>
+    
+    <!-- scripts for fake backend -->
+    <script src="scripts/angular-mocks.js"></script>
+    <script src="scripts/fakeBackend.js"></script>
     
 </body>
 </html>

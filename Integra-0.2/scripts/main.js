@@ -1,6 +1,8 @@
 'use strict';
 
-var app = angular.module('Integra-0.1', ['ui.router', 'ngMaterial', 'ngMessages']);
+var app = angular.module('Integra-0.1', ['ui.router', 'ngMaterial', 'ngMessages', 'ngStorage', 'ngMockE2E']);
+app.run(run);
+
 
 app.config([
     '$stateProvider',
@@ -52,10 +54,32 @@ app.config([
         
         .state('app.integrators.detail', {
             url: '/:id',
-            views : {
+            views: {
                 'detail@app.integrators': {
-                    templateUrl: 'views/integrators/integrator-detail.html',
+                    templateUrl: 'views/integrators/integrators-detail.html',
                     controller: 'IntegratorsController'
+                }
+            }
+        })
+        
+        .state('login', {
+            url: '/login',
+            views: {
+                'header': {
+                    templateUrl: 'views/shared/header.html'
+                },
+                'main-menu': {
+                    templateUrl: 'views/shared/mainmenu.html',
+                    controller: 'MainMenuController',
+                    controllerAs: 'mainMenu'
+                },
+                'nav': {
+                    templateUrl: 'views/shared/nav.html'
+                },
+                'content@': {
+                    templateUrl: 'views/authentication/authentication.html',
+                    controller: 'AuthenticationController',
+                    controllerAs: 'auth'
                 }
             }
         })
@@ -73,6 +97,7 @@ app.controller('mainController', ['$scope', 'Page', function ($scope, Page) {
 
 app.factory('Page', function ($location) {
     var title = 'Integra-0.1';
+    var subtitle = '';
     
     return {
         Title: function () {
@@ -80,6 +105,12 @@ app.factory('Page', function ($location) {
         },
         SetTitle: function (newTitle) {
             title = newTitle;
+        },
+        Subtitle: function () {
+            return subtitle;
+        },
+        SetSubtitle: function (newSubtitle) {
+            subtitle = newSubtitle;
         },
         Path: function () {
             return $location.path();
@@ -107,3 +138,20 @@ app.filter('keyboardShortcut', ['$window', function ($window) {
         }).join(separator);        
     };
 }]);
+
+function run($rootScope, $http, $location, $localStorage) {
+    // keep user logged in after page refresh
+    if ($localStorage.currentUser) {
+        $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.currentUser.token;
+    }
+
+    // redirect to login page if not logged in and trying to access a restricted page
+    $rootScope.$on('$locationChangeStart', function (event, next, current) {
+        var publicPages = ['/login'];
+        var restrictedPage = publicPages.indexOf($location.path()) === -1;
+        if (restrictedPage && !$localStorage.currentUser) {
+            $location.path('/login');
+        }
+    });
+};
+
