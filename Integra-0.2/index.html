@@ -24,7 +24,7 @@
             <div ui-view="nav" id="div-nav"></div>
         </nav>
         <section id="content">
-            <h2>{{ Page.Subtititle() }}</h2>
+            <h2>{{ Page.Subtitle() != "" ? Page.Title() + " - " + Page.Subtitle() : Page.Title() }}</h2>
             <div ui-view="content" id="div-content">Content</div>
         </section>
         <footer>
