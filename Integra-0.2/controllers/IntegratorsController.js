@@ -1,10 +1,52 @@
 'use strict';
 
-app.controller('IntegratorsController', ['$scope', '$stateParams', 'IntegratorsService', 'Page', function ($scope, $stateParams, IntegratorsService, Page) {
+app.controller('IntegratorsController', ['$scope', '$stateParams', '$location', '$anchorScroll', 'IntegratorsService', 'Page', 
+                                         function ($scope, $stateParams, $location, $anchorScroll, IntegratorsService, Page) {
     Page.SetTitle('Integradores');
-    $scope.viewTitle = 'Integradores';
     $scope.integrators = IntegratorsService.list();
     $scope.selected = IntegratorsService.find($stateParams.id)
+    var hasSelected = false;
+    
+    $scope.search = '';
+    $scope.searchString = '';
+    $scope.activeId = null;
+    $scope.listActiveIndex = null;
+    
+    var regex;
+    $scope.$watch('search', function (value) {
+        //console.log('value = ' + value);
+        $scope.searchString = escapeRegExp(value);
+        if (value == '' && $scope.listActiveIndex > 0) {
+            
+        };
+        regex = new RegExp('\\b' + escapeRegExp(value), 'i');
+    });
+                                                                                              
+    $scope.filterBySearch = function(integrator) {
+        if (!$scope.search) return true;
+        return regex.test(integrator.name);
+    };
+
+    $scope.showDetails = function (id, listIndex) {
+        $scope.activeId = id;
+        $scope.listActiveIndex = listIndex;
+        console.log('listActiveIndex = ' + $scope.listActiveIndex)
+        $location.path('integradores/' + id);
+    };
+    
+    $scope.refresh = function () {
+        $scope.activeId = null;
+        $scope.listActiveIndex = null;
+        $scope.search = '';
+        $scope.searchString = '';
+        $location.path('integradores');
+        
+    }
+    
+    $scope.new = function () {
+        console.log('new');
+    };
+                                             
 }]);
 
 /*
@@ -65,6 +107,66 @@ app.factory('IntegratorsService', function () {
                     email: 'admin@integrador3.com.br'
                 }
             ]
+        },
+        {
+            id: 4,
+            name: '2222222222',
+            description: 'Integrador 2 .',
+            contacts: [
+                {
+                    id: 3,
+                    name: 'Pedro',
+                    email: 'pedro@22222222.com'
+                }
+            ]
+        },
+        {
+            id: 5,
+            name: '2222222222',
+            description: 'Integrador 2 .',
+            contacts: [
+                {
+                    id: 3,
+                    name: 'Pedro',
+                    email: 'pedro@22222222.com'
+                }
+            ]
+        },
+        {
+            id: 6,
+            name: '2222222222',
+            description: 'Integrador 2 .',
+            contacts: [
+                {
+                    id: 3,
+                    name: 'Pedro',
+                    email: 'pedro@22222222.com'
+                }
+            ]
+        },
+        {
+            id: 7,
+            name: '2222222222',
+            description: 'Integrador 2 .',
+            contacts: [
+                {
+                    id: 3,
+                    name: 'Pedro',
+                    email: 'pedro@22222222.com'
+                }
+            ]
+        },
+        {
+            id: 8,
+            name: '2222222222',
+            description: 'Integrador 2 .',
+            contacts: [
+                {
+                    id: 3,
+                    name: 'Pedro',
+                    email: 'pedro@22222222.com'
+                }
+            ]
         }
     ];
     
@@ -79,3 +181,8 @@ app.factory('IntegratorsService', function () {
         }        
     }
 });
+
+
+function escapeRegExp(string){
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}

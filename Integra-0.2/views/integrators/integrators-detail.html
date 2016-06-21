@@ -1,35 +1,43 @@
-<h2>{{ selected.name }}</h2>
-
-<table>
-    <tbody>
-        <tr>
-            <td><b>id:&nbsp;</b></td>
-            <td>{{ selected.id }}</td>
-        </tr>
-        <tr>
-            <td><b>Nome:&nbsp;</b></td>
-            <td>{{ selected.name }}</td>
-        </tr>
-        <tr>
-            <td><b>Descri&ccedil;&atilde;o:&nbsp;</b></td>
-            <td>{{ selected.description }}</td>
-        </tr>
-    </tbody>
-</table>
-
-<h3>Contatos</h3>
-<td>
+<md-toolbar>
+    <div class="md-toolbar-tools" style="height: 54px">
+        <h3 class="md-toolbar-tools">
+            <span>{{ selected.name }}</span>
+        </h3>
+    </div>
+</md-toolbar>
+<md-content layout="column">
     <table>
-        <thead>
-            <th>Nome</th>
-            <th>Email</th>
-        </thead>
         <tbody>
-            <tr ng-repeat="contact in selected.contacts">
-                <td>{{ contact.name }}</td>
-                <td>{{ contact.email }}</td>
+            <tr>
+                <td><b>id:&nbsp;</b></td>
+                <td>{{ selected.id }}</td>
+            </tr>
+            <tr>
+                <td><b>Nome:&nbsp;</b></td>
+                <td>{{ selected.name }}</td>
+            </tr>
+            <tr>
+                <td><b>Descri&ccedil;&atilde;o:&nbsp;</b></td>
+                <td>{{ selected.description }}</td>
             </tr>
         </tbody>
     </table>
-</td>
+
+    <h3>Contatos</h3>
+    <td>
+        <table>
+            <thead>
+                <th>Nome</th>
+                <th>Email</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="contact in selected.contacts">
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.email }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </td>
+</md-content>
+
 

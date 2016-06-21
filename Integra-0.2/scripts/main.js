@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('Integra-0.1', ['ui.router', 'ngMaterial', 'ngMessages', 'ngStorage', 'ngMockE2E']);
+var app = angular.module('Integra-0.1', ['ui.router', 'ngMaterial', 'ngMessages', 'ngStorage', 'ngMockE2E', 'auto-scroll']);
 app.run(run);
 
 
@@ -154,4 +154,38 @@ function run($rootScope, $http, $location, $localStorage) {
         }
     });
 };
+
+app.directive('inputClear', function () {
+    return {
+        restrict: 'A',
+        compile: function (element, attrs) {
+            var color = attrs.inputClear;
+            var style = color ? "color:" + color + ";" : "";
+            var action = attrs.ngModel + " = ''";
+            element.after(
+                '<md-button class="animate-show md-icon-button md-accent"' +
+                'ng-show="' + attrs.ngModel + '" ng-click="' + action + '"' +
+                'style="position: absolute; top: -11px; right: -5px; margin: 13px 0px;">' +
+                '<div style="' + style + '"><b>X</b></div>' +
+                '</md-button>');
+        }
+    };
+});
+    
+app.directive('inputClearNoMaterial', function () {
+    return {
+        restrict: 'A',
+        compile: function (element, attrs) {
+            var color = attrs.inputClearNoMaterial;
+            var style = color ? "color:" + color + ";" : "";
+            var action = attrs.ngModel + " = ''";
+            element.after(
+                '<span class="animate-show"' +
+                'ng-show="' + attrs.ngModel + '" ng-click="' + action + '"' +
+                'style="position: absolute; margin: 3px -20px; cursor: pointer;">' +
+                '<div style="' + style + '">x</div>' +
+                '</span>');
+        }
+    };
+});
 

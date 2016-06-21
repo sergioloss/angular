@@ -13,23 +13,28 @@
     </style>
     <link rel="stylesheet" type="text/css" href="/content/main.css" />
     <link rel="stylesheet" type="text/css" href="/content/angular-material.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <body>
     <div id="div-container">
-        <header>
-            <div ui-view="header" id="div-header"></div>
-            <div ui-view="main-menu" id="main-menu"></div>
-        </header>
-        <nav>            
-            <div ui-view="nav" id="div-nav"></div>
-        </nav>
-        <section id="content">
-            <h2>{{ Page.Subtitle() != "" ? Page.Title() + " - " + Page.Subtitle() : Page.Title() }}</h2>
-            <div ui-view="content" id="div-content">Content</div>
-        </section>
-        <footer>
-            <div ui-view="footer" id="div-footer">Footer</div>
-        </footer>
+        <div class='inner'>
+            <header>
+                <div ui-view="header" id="div-header"></div>
+                <div ui-view="main-menu" id="main-menu"></div>
+            </header>
+            <nav>            
+                <div ui-view="nav" id="div-nav"></div>
+            </nav>
+            <section id="content">
+                <!--
+                <h2>{{ Page.Subtitle() != "" ? Page.Title() + " - " + Page.Subtitle() : Page.Title() }}</h2>
+                -->
+                <div ui-view="content" id="div-content">Content</div>
+            </section>
+            <footer>
+                <div ui-view="footer" id="div-footer">Footer</div>
+            </footer>
+        </div>
     </div>   
     
     <!-- scripts -->
@@ -42,6 +47,8 @@
     <script src="scripts/angular-material.js"></script>
     
     <script src="scripts/ngStorage.js"></script>
+    
+    <script src="scripts/angular-auto-scroll.js"></script>
 
     <!-- scripts-controllers -->
     <script src="scripts/main.js"></script>

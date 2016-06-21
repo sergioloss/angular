@@ -1,10 +1,51 @@
-
-<div class="div-sidebar">
-    <ul>
-        <li ng-repeat="integrator in integrators">
-            <a ui-sref=".detail({id: integrator.id})" >{{ integrator.id + " - " + integrator.name }}</a>
-        </li>
-    </ul>
+<div layout="column" layout-align="left left" class="md-whiteframe-z1">
+    <md-toolbar>
+        <h2 class="md-toolbar-tools"><span>Integradores</span></h2>
+    </md-toolbar>
+    <md-content layout="search" class="md-padding">
+        <md-input-container flex  style="background-color: antiquewhite;">
+            <label>Buscar...</label>
+            <input type="text" ng-model="search" input-clear="red">
+        </md-input-container>    
+    </md-content>
+    <md-content layout="row" 
+         class="md-padding" 
+         style="padding-top: 0;"
+         >
+        <div layout="column"
+             flex="40"              
+             class="div-sidebar"
+             ng-cloak=""
+             >
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h3>
+                        <span>Integradores</span>
+                    </h3>
+                    <span flex></span>
+                    <div>
+                        <i class="material-icons" style="cursor: pointer;" ng-click="refresh()">refresh</i>
+                        <i class="material-icons" style="cursor: pointer;" ng-click="new()">add_circle</i>
+                    </div>
+                </div>
+            </md-toolbar>
+            <md-content class="scroll-container" layout="column" >
+                <md-list flex auto-scroll="{offsetTop: 10, scrollTo: 'nav-active', watch: 'searchString'}">
+                    <md-subheader class="md-no-sticky" style="background-color: #ccd8ff;"><b>{{ searchString != "" ? 'Resultado da busca por "' + searchString + '"' : 'Lista completa'}}</b></md-subheader>
+                    <md-list-item ng-repeat="integrator in integrators | filter:filterBySearch" 
+                                  class="md-2-line" 
+                                  ng-class="{ 'nav-active': integrator.id == activeId }"                                  
+                                  ng-click="showDetails(integrator.id, $index)"
+                                  >
+                        <div class="md-list-item-text" layout="column" id="anchor{{ integrator.id }}">
+                            <h3><span>id:&nbsp;</span><b>{{ integrator.id }}</b></h3>
+                            <h4><span>Nome:&nbsp;</span><b>{{ integrator.name }}</b></h4>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </md-content>                
+        </div>
+        <div flex layout="column" ui-view="detail" class="div-integrator-detail">            
+        </div>
+    </md-content>
 </div>
-
-<div ui-view="detail" class="div-integrator-detail"></div>
