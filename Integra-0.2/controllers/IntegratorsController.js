@@ -16,9 +16,6 @@ app.controller('IntegratorsController', ['$scope', '$stateParams', '$location', 
     $scope.$watch('search', function (value) {
         //console.log('value = ' + value);
         $scope.searchString = escapeRegExp(value);
-        if (value == '' && $scope.listActiveIndex > 0) {
-            
-        };
         regex = new RegExp('\\b' + escapeRegExp(value), 'i');
     });
                                                                                               

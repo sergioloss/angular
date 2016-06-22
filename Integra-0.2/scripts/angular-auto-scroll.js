@@ -1,4 +1,4 @@
-angular.module('auto-scroll', []).directive('autoScroll', function($timeout) {
+angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $location, $anchorScroll) {
   return {
     restrict: 'A',
     scope: {
@@ -14,12 +14,16 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout) {
           var elem = angular.element(el)[0];
           var child = el.children(':first')[0];
           //var $scrollTo = $(el).find(scrollTo);
-          var $scrollTo = elem.getElementsByClassName(scrollTo);
+          var $scrollTo = child.getElementsByClassName(scrollTo);
+            
 
           if($scrollTo.length){
             //$(el).scrollTop(0).scrollTop($scrollTo.offset().top - $(el).offset().top - offsetTop);  
-              console.log('$scrollTo[0].scrollTop = ' + $scrollTo[0].getBoundingClientRect().top);
-            elem.scrollTop = $scrollTo.scrollTop; //700; //($scrollTo.offset().top - elem.offset().top - offsetTop);  
+              //console.log('$scrollTo[0].scrollTop = ' + $scrollTo[0].getBoundingClientRect().top);
+            //elem.scrollTop = $scrollTo.scrollTop; //700; //($scrollTo.offset().top - elem.offset().top - offsetTop);  
+              console.log('$scrollTo.id = ' + $scrollTo[0].attributes['id'].value);
+              //$location.hash($scrollTo[0].attributes['id'].value);
+              $anchorScroll($scrollTo[0].attributes['id'].value);
           }
         });
       })
@@ -27,6 +31,7 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout) {
   }
 });
 
+/*
 app.directive('scrollIf', function () {
     
     var getScrollingParent = function(element) {
@@ -59,3 +64,4 @@ app.directive('scrollIf', function () {
     }
     
 });
+*/

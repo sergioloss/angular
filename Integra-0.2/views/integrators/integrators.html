@@ -36,8 +36,9 @@
                                   class="md-2-line" 
                                   ng-class="{ 'nav-active': integrator.id == activeId }"                                  
                                   ng-click="showDetails(integrator.id, $index)"
+                                  ng-attr-id="{{ integrator.id == activeId ? 'anchor' + integrator.id : $index }}"
                                   >
-                        <div class="md-list-item-text" layout="column" id="anchor{{ integrator.id }}">
+                        <div class="md-list-item-text" layout="column">
                             <h3><span>id:&nbsp;</span><b>{{ integrator.id }}</b></h3>
                             <h4><span>Nome:&nbsp;</span><b>{{ integrator.name }}</b></h4>
                         </div>
