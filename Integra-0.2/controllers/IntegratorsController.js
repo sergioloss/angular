@@ -27,7 +27,7 @@ app.controller('IntegratorsController', ['$scope', '$stateParams', '$location', 
     $scope.showDetails = function (id, listIndex) {
         $scope.activeId = id;
         $scope.listActiveIndex = listIndex;
-        console.log('listActiveIndex = ' + $scope.listActiveIndex)
+        //console.log('listActiveIndex = ' + $scope.listActiveIndex)
         $location.path('integradores/' + id);
     };
     
@@ -162,6 +162,42 @@ app.factory('IntegratorsService', function () {
                     id: 3,
                     name: 'Pedro',
                     email: 'pedro@22222222.com'
+                }
+            ]
+        },
+        {
+            id: 9,
+            name: '999999999',
+            description: 'Integrador 9 .',
+            contacts: [
+                {
+                    id: 3,
+                    name: 'Pedro',
+                    email: 'pedro@999999.com'
+                }
+            ]
+        },
+        {
+            id: 10,
+            name: 'Dez',
+            description: 'Novo integrador.',
+            contacts: [
+                {
+                    id: 3,
+                    name: 'Pedro',
+                    email: 'pedro@dez.com'
+                }
+            ]
+        },
+        {
+            id: 11,
+            name: 'Onze',
+            description: 'Outro integrador.',
+            contacts: [
+                {
+                    id: 3,
+                    name: 'Pedro',
+                    email: 'pedro@mail.com'
                 }
             ]
         }

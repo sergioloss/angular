@@ -1,34 +1,50 @@
 angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $location, $anchorScroll) {
-  return {
-    restrict: 'A',
-    scope: {
-      autoScrollOptions: '=autoScroll'
-    },
-    link: function($scope, el) {
-      var offsetTop = $scope.autoScrollOptions.offsetTop ? $scope.autoScrollOptions.offsetTop : 0;
-      var scrollTo = $scope.autoScrollOptions.scrollTo;
-      var watch = $scope.autoScrollOptions.watch;
-
-      $scope.$parent.$watch(watch, function() {
-        $timeout(function () {
-          var elem = angular.element(el)[0];
-          var child = el.children(':first')[0];
-          //var $scrollTo = $(el).find(scrollTo);
-          var $scrollTo = child.getElementsByClassName(scrollTo);
+    return {
+        restrict: 'A',
+        scope: {
+            autoScrollOptions: '=autoScroll'
+        },
+        link: function($scope, element, attributes, $index) {
+            var watch = $scope.autoScrollOptions.watch;
+            var scrollToSelectedClassName = $scope.autoScrollOptions.scrollToSelectedClassName;
             
+            var el = angular.element(element)[0];
+            var scrollPosition = 0;
+            var selectedScrollPosition = 0;
+            
+            //console.log('oooooooo');
+            $scope.$parent.$watch(watch, function(newValue, oldValue) {
+            
+                var $scrollTo = el.getElementsByClassName(scrollToSelectedClassName);
+                if ($scrollTo.length)
+                {
+                    var childs = el.getElementsByTagName('md-list-item')
+                    var h = 0;
 
-          if($scrollTo.length){
-            //$(el).scrollTop(0).scrollTop($scrollTo.offset().top - $(el).offset().top - offsetTop);  
-              //console.log('$scrollTo[0].scrollTop = ' + $scrollTo[0].getBoundingClientRect().top);
-            //elem.scrollTop = $scrollTo.scrollTop; //700; //($scrollTo.offset().top - elem.offset().top - offsetTop);  
-              console.log('$scrollTo.id = ' + $scrollTo[0].attributes['id'].value);
-              //$location.hash($scrollTo[0].attributes['id'].value);
-              $anchorScroll($scrollTo[0].attributes['id'].value);
-          }
-        });
-      })
+                    if (childs.length) {
+                        for (i = 0; i < childs.length; i++) {
+                            if (childs[i].attributes['class'].value.indexOf(scrollToSelectedClassName) > -1) {
+                                break;
+                            }
+                            h += childs[i].clientHeight;
+                        }                    
+                    };
+                    console.log('h = ' + h)
+                    scrollPosition = h;
+                }
+
+                if (oldValue == '' && newValue != '') {   
+                    // scrollPosition = el.scrollTop;
+                };
+
+                if (newValue == '') {
+                    el.scrollTop = scrollPosition;     
+                    //el.animate({scrollTop: 200}, "slow");
+                }
+                
+            })
+        }
     }
-  }
 });
 
 /*

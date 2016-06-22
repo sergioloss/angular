@@ -5078,9 +5078,15 @@ md-toolbar {
     min-height: 128px;
     max-height: 128px; }
   md-toolbar.md-medium-tall {
+      /*
     height: 88px;
     min-height: 88px;
-    max-height: 88px; }
+    max-height: 88px; 
+      */
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
+    }
     md-toolbar.md-medium-tall .md-toolbar-tools {
       height: 48px;
       min-height: 48px;

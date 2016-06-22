@@ -17,7 +17,7 @@
              class="div-sidebar"
              ng-cloak=""
              >
-            <md-toolbar>
+            <md-toolbar class="md-medium-tall">
                 <div class="md-toolbar-tools">
                     <h3>
                         <span>Integradores</span>
@@ -29,14 +29,13 @@
                     </div>
                 </div>
             </md-toolbar>
-            <md-content class="scroll-container" layout="column" auto-scroll="{offsetTop: 10, scrollTo: 'nav-active', watch: 'searchString'}">
+            <md-content class="scroll-container" layout="column" auto-scroll="{scrollToSelectedClassName: 'nav-active', watch: 'searchString'}">
                 <md-list flex>
-                    <md-subheader class="md-no-sticky" style="background-color: #ccd8ff;"><b>{{ searchString != "" ? 'Resultado da busca por "' + searchString + '"' : 'Lista completa'}}</b></md-subheader>
+                    <md-subheader class="md-sticky" style="background-color: #ccd8ff;"><b>{{ searchString != "" ? 'Resultado da busca por "' + searchString + '"' : 'Lista completa'}}</b></md-subheader>
                     <md-list-item ng-repeat="integrator in integrators | filter:filterBySearch" 
                                   class="md-2-line" 
                                   ng-class="{ 'nav-active': integrator.id == activeId }"                                  
                                   ng-click="showDetails(integrator.id, $index)"
-                                  ng-attr-id="{{ integrator.id == activeId ? 'anchor' + integrator.id : $index }}"
                                   >
                         <div class="md-list-item-text" layout="column">
                             <h3><span>id:&nbsp;</span><b>{{ integrator.id }}</b></h3>
