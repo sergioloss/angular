@@ -6,15 +6,21 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $lo
         },
         link: function($scope, element, attributes, $index) {
             var watch = $scope.autoScrollOptions.watch;
+            var reset = $scope.autoScrollOptions.reset;
             var scrollToSelectedClassName = $scope.autoScrollOptions.scrollToSelectedClassName;
             
             var el = angular.element(element)[0];
             var scrollPosition = 0;
             var selectedScrollPosition = 0;
             
+            var animateCrollDuration = 250; // milliseconds: 1000 = 1s
+            
             //console.log('oooooooo');
             $scope.$parent.$watch(watch, function(newValue, oldValue) {
             
+                //el.scrollTop = 0;
+                scrollTo(el, 0, animateCrollDuration);
+                
                 var $scrollTo = el.getElementsByClassName(scrollToSelectedClassName);
                 if ($scrollTo.length)
                 {
@@ -29,21 +35,38 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $lo
                             h += childs[i].clientHeight;
                         }                    
                     };
-                    console.log('h = ' + h)
+                    //console.log('h = ' + h)
                     scrollPosition = h;
                 }
 
-                if (oldValue == '' && newValue != '') {   
-                    // scrollPosition = el.scrollTop;
-                };
-
-                if (newValue == '') {
-                    el.scrollTop = scrollPosition;     
-                    //el.animate({scrollTop: 200}, "slow");
+                if (!newValue) {
+                    //el.scrollTop = scrollPosition;     
+                    scrollTo(el, scrollPosition, animateCrollDuration);
                 }
                 
             })
+            
+            $scope.$parent.$watch(reset, function(newValue, oldValue) {
+                if (newValue != oldValue) {
+                    //el.scrollTop = 0;
+                    scrollTo(el, 0, animateCrollDuration);
+                }
+            })
+            
+            function scrollTo(element, scrolPositionTo, scrollDuration) {
+                if (scrollDuration <= 0) return;
+                var difference = scrolPositionTo - element.scrollTop;
+                var perTick = difference / scrollDuration * 10;
+
+                setTimeout(function() {
+                    element.scrollTop = element.scrollTop + perTick;
+                    if (element.scrollTop === scrolPositionTo) return;
+                    scrollTo(element, scrolPositionTo, scrollDuration - 10);
+                }, 10);
+            }
+
         }
+        
     }
 });
 

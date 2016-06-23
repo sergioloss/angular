@@ -4,13 +4,24 @@ app.controller('IntegratorsController', ['$scope', '$stateParams', '$location', 
                                          function ($scope, $stateParams, $location, $anchorScroll, IntegratorsService, Page) {
     Page.SetTitle('Integradores');
     $scope.integrators = IntegratorsService.list();
-    $scope.selected = IntegratorsService.find($stateParams.id)
-    var hasSelected = false;
+                                             
+    if ($stateParams.id == 'novo') {
+        $scope.selected = {};
+        $scope.detailSubtitle = 'Incluir Novo Integrador';
+        $scope.readOnly = false;
+    } else {
+        $scope.selected = IntegratorsService.find($stateParams.id);
+        $scope.editIntegrator = angular.copy($scope.selected);
+        $scope.detailSubtitle = $scope.selected ? $scope.selected.name : null;
+        $scope.readOnly = true;
+    }       
     
     $scope.search = '';
-    $scope.searchString = '';
+    $scope.searchString = null;
     $scope.activeId = null;
-    $scope.listActiveIndex = null;
+    $scope.resetListScroll = 0;
+    //$scope.listActiveIndex = null;       
+
     
     var regex;
     $scope.$watch('search', function (value) {
@@ -24,26 +35,59 @@ app.controller('IntegratorsController', ['$scope', '$stateParams', '$location', 
         return regex.test(integrator.name);
     };
 
-    $scope.showDetails = function (id, listIndex) {
+    $scope.filterByName = function(integrator) {
+        if (integrador.name == 'Incluir Novo Integrador') {
+            integrador.name = '';
+        }
+    };
+
+    $scope.showDetails = function (id) {          
         $scope.activeId = id;
-        $scope.listActiveIndex = listIndex;
-        //console.log('listActiveIndex = ' + $scope.listActiveIndex)
         $location.path('integradores/' + id);
     };
     
-    $scope.refresh = function () {
-        $scope.activeId = null;
-        $scope.listActiveIndex = null;
+    $scope.refreshList = function () {
         $scope.search = '';
-        $scope.searchString = '';
+        $scope.searchString = null;
+        $scope.activeId = null;
+        $scope.selected = null;
         $location.path('integradores');
-        
-    }
+        $scope.resetListScroll = $scope.resetListScroll == 0 ? 1 : 0;
+    };
     
     $scope.new = function () {
-        console.log('new');
+        //console.log('new');
+        $scope.refresh();
+        $scope.activeId = null;
+        $location.path('integradores/novo');
+    };
+    
+    $scope.edit = function () {  
+        $scope.readOnly = false;
+    };
+
+    $scope.save = function() {
+        $scope.selected = angular.copy($scope.editIntegrator)
+        //$location.path('integradores/' + id);
+        //IntegratorsService.save($scope.selected);
+        $scope.readOnly = true;
+        //$scope.activeId = $scope.selected.id;
+        //$location.path('integradores/' + $scope.selected.id);
+        //$scope.integrators = IntegratorsService.list();
+        var arr = $scope.integrators;
+        for (var i = 0; i < arr.length; i++) {
+            if ($scope.integrators[i].id == $scope.editIntegrator.id) {
+                $scope.integrators[i] = $scope.editIntegrator;
+            }
+        }        
     };
                                              
+    $scope.refreshDetail = function (id) {
+        $scope.selected = IntegratorsService.find($stateParams.id);
+        $scope.detailSubtitle = $scope.selected ? $scope.selected.name : null;
+        $scope.readOnly = true;    
+    };
+    
 }]);
 
 /*
@@ -211,7 +255,13 @@ app.factory('IntegratorsService', function () {
             return _.find(integrators, function (integrator) {
                 return integrator.id == id;
             });
-        }        
+        },
+        save: function (integrator)  {
+            var old = _.find(integrators, function (integrator) {
+                return integrator.id == integrator.id;
+            });
+            old = integrator;
+        }
     }
 });
 

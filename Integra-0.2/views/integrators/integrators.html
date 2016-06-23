@@ -24,18 +24,19 @@
                     </h3>
                     <span flex></span>
                     <div>
-                        <i class="material-icons" style="cursor: pointer;" ng-click="refresh()">refresh</i>
+                        <i class="material-icons" style="cursor: pointer;" ng-click="refreshList()">refresh</i>
                         <i class="material-icons" style="cursor: pointer;" ng-click="new()">add_circle</i>
                     </div>
                 </div>
             </md-toolbar>
-            <md-content class="scroll-container" layout="column" auto-scroll="{scrollToSelectedClassName: 'nav-active', watch: 'searchString'}">
+            <md-content class="scroll-container" layout="column" 
+                        auto-scroll="{scrollToSelectedClassName: 'nav-active', watch: 'searchString', reset: 'resetListScroll'}">
                 <md-list flex>
-                    <md-subheader class="md-sticky" style="background-color: #ccd8ff;"><b>{{ searchString != "" ? 'Resultado da busca por "' + searchString + '"' : 'Lista completa'}}</b></md-subheader>
+                    <md-subheader class="md-sticky" style="background-color: #ccd8ff;"><b>{{ searchString ? 'Resultado da busca por "' + searchString + '"' : 'Lista completa'}}</b></md-subheader>
                     <md-list-item ng-repeat="integrator in integrators | filter:filterBySearch" 
                                   class="md-2-line" 
                                   ng-class="{ 'nav-active': integrator.id == activeId }"                                  
-                                  ng-click="showDetails(integrator.id, $index)"
+                                  ng-click="showDetails(integrator.id)"
                                   >
                         <div class="md-list-item-text" layout="column">
                             <h3><span>id:&nbsp;</span><b>{{ integrator.id }}</b></h3>
