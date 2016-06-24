@@ -11,6 +11,7 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $lo
             
             var el = angular.element(element)[0];
             var scrollPosition = 0;
+            //var scrollPosition = getScrollPosition();
             var selectedScrollPosition = 0;
             
             var animateCrollDuration = 250; // milliseconds: 1000 = 1s
@@ -18,9 +19,11 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $lo
             //console.log('oooooooo');
             $scope.$parent.$watch(watch, function(newValue, oldValue) {
             
-                //el.scrollTop = 0;
+                //console.log('watch = ' + newValue);
                 scrollTo(el, 0, animateCrollDuration);
                 
+                scrollPosition = getScrollPosition();
+                /*
                 var $scrollTo = el.getElementsByClassName(scrollToSelectedClassName);
                 if ($scrollTo.length)
                 {
@@ -38,6 +41,7 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $lo
                     //console.log('h = ' + h)
                     scrollPosition = h;
                 }
+                */
 
                 if (!newValue) {
                     //el.scrollTop = scrollPosition;     
@@ -47,11 +51,80 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $lo
             })
             
             $scope.$parent.$watch(reset, function(newValue, oldValue) {
+                
+                scrollPosition = getScrollPosition();
+                /*
+                var $scrollTo = el.getElementsByClassName(scrollToSelectedClassName);
+                if ($scrollTo.length)
+                {
+                    var childs = el.getElementsByTagName('md-list-item')
+                    var h = 0;
+
+                    if (childs.length) {
+                        for (i = 0; i < childs.length; i++) {
+                            if (childs[i].attributes['class'].value.indexOf(scrollToSelectedClassName) > -1) {
+                                break;
+                            }
+                            h += childs[i].clientHeight;
+                        }                    
+                    };
+                    //console.log('h = ' + h)
+                    scrollPosition = h;
+                }
+                */
+                
                 if (newValue != oldValue) {
-                    //el.scrollTop = 0;
-                    scrollTo(el, 0, animateCrollDuration);
+                    if (newValue < 1) {
+                        scrollTo(el, 0, animateCrollDuration);
+                    } else {
+                        scrollTo(el, scrollPosition, animateCrollDuration);
+                    }                    
                 }
             })
+            
+            function getScrollPosition() {
+                var index = $scope.$parent.scrollToIndex;
+                console.log('$scope.$parent.scrollToIndex = ' + $scope.$parent.scrollToIndex);
+                var scrollPosition = 0;
+                var childs = el.getElementsByTagName('md-list-item')
+                var h = 0;
+                var i = 0
+
+                if (childs.length) {
+                    for (i = 0; i < childs.length; i++) {
+                        if (childs[i].attributes['index'].value == index) {
+                            break;
+                        }
+                        h += childs[i].clientHeight;
+                    }                    
+                };
+                //console.log('i = ' + i + ' - ' + new Date().getTime());
+                scrollPosition = h;
+                return scrollPosition;
+            };
+            
+            function getScrollPosition_OLD() {
+                var scrollPosition = 0;
+                var $scrollTo = el.getElementsByClassName(scrollToSelectedClassName);
+                if ($scrollTo.length)
+                {
+                    var childs = el.getElementsByTagName('md-list-item')
+                    var h = 0;
+                    var i = 0
+
+                    if (childs.length) {
+                        for (i = 0; i < childs.length; i++) {
+                            if (childs[i].attributes['class'].value.indexOf(scrollToSelectedClassName) > -1) {
+                                break;
+                            }
+                            h += childs[i].clientHeight;
+                        }                    
+                    };
+                    //console.log('i = ' + i + ' - ' + new Date().getTime());
+                    scrollPosition = h;
+                }
+                return scrollPosition;
+            }
             
             function scrollTo(element, scrolPositionTo, scrollDuration) {
                 if (scrollDuration <= 0) return;

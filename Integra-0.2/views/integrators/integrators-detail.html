@@ -5,7 +5,7 @@
         </h3>
         <span flex></span>
         <div>
-            <i class="material-icons" style="cursor: pointer;" ng-click="refreshDetail(selected.id)">refresh</i>
+            <i class="material-icons" style="cursor: pointer;" ng-click="refreshDetail(selected.id)">undo</i>
             <i class="material-icons" style="cursor: pointer;" ng-click="edit()">edit</i>
             <i class="material-icons" style="cursor: pointer;" ng-click="save()">save</i>
         </div>
@@ -13,21 +13,25 @@
 </md-toolbar>
 <md-content layout="column"  class="md-padding">
     <form name="form" novalidate class="css-form"  ng-class="{ formEditMode : !readOnly }" layout="column">
-        <md-input-container>
-            <label>id:</label>
-            <input type="text" name="id" ng-model="editIntegrator.id" readonly />
-        </md-input-container>
-        <md-input-container>
-            <label>Nome:</label>
-            <input type="text" name="name" ng-model="editIntegrator.name" required ng-readonly="readOnly"/>
-            <div ng-messages="form.name.$error">                     
-                <div ng-message="required">Campo obrigatório.</div>
-            </div>
-        </md-input-container>
+        <div layout="row">
+            <md-input-container>
+                <label>id:</label>
+                <input type="text" name="id" ng-model="editIntegrator.id" readonly />
+            </md-input-container>
+            <md-input-container flex>
+                <label>Nome:</label>
+                <input type="text" name="name" ng-model="editIntegrator.name" required ng-readonly="readOnly"/>
+                <div ng-messages="form.name.$error">                     
+                    <div ng-message="required">Campo obrigatório.</div>
+                </div>
+            </md-input-container>
+        </div>
         <md-input-container>
             <label>Descri&ccedil;&atilde;o:</label>
             <textarea name="description" ng-model="editIntegrator.description" ng-readonly="readOnly"></textarea>
         </md-input-container>
+        <h3> Contatos</h3>
+        
     </form>
 </md-content>
 

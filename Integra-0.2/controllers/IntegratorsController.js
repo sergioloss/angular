@@ -1,27 +1,48 @@
 'use strict';
 
-app.controller('IntegratorsController', ['$scope', '$stateParams', '$location', '$anchorScroll', 'IntegratorsService', 'Page', 
-                                         function ($scope, $stateParams, $location, $anchorScroll, IntegratorsService, Page) {
+app.controller('IntegratorsController', ['$scope', '$stateParams', '$location', '$timeout', 'IntegratorsService', 'Page', 
+                                         function ($scope, $stateParams, $location, $timeout, IntegratorsService, Page) {
+    // console.log('IntegratorsController');
+
     Page.SetTitle('Integradores');
     $scope.integrators = IntegratorsService.list();
                                              
+    $scope.search = '';
+    $scope.searchString = null;    
+    $scope.resetListScroll = 0;
+
     if ($stateParams.id == 'novo') {
         $scope.selected = {};
         $scope.detailSubtitle = 'Incluir Novo Integrador';
         $scope.readOnly = false;
+        $scope.activeId = null;
     } else {
-        $scope.selected = IntegratorsService.find($stateParams.id);
-        $scope.editIntegrator = angular.copy($scope.selected);
-        $scope.detailSubtitle = $scope.selected ? $scope.selected.name : null;
-        $scope.readOnly = true;
+        var selected = IntegratorsService.find($stateParams.id);
+        if (selected) {
+            // console.log('selected');
+            $scope.selected = selected;
+            $scope.editIntegrator = angular.copy(selected);
+            $scope.detailSubtitle = selected.name;
+            $scope.readOnly = true;
+            
+            $scope.search = selected.name;
+            $scope.searchString = selected.name;
+            //$scope.showDetails(selected.id);
+            $scope.selectListItem(selected.id);
+            $scope.resetListScroll = new Date().getTime();
+            //console.log('$scope.resetListScroll = ' + $scope.resetListScroll);
+            //$scope.activeId = selected.id;
+            /*
+            $timeout(function() {
+                //$scope.resetListScroll = $scope.resetListScroll == 1 ? 2 : 1; // Mudar o valor para acionar o $watch(reset) da directive "auto-scroll"
+                $scope.selectListItem(selected.id);
+            }); 
+            */
+        }
+        //console.log('$scope.search = ' + $scope.search);
+        //console.log('$scope.searchString = ' + $scope.searchString);
+        //console.log('$scope.activeId = ' + $scope.activeId);
     }       
-    
-    $scope.search = '';
-    $scope.searchString = null;
-    $scope.activeId = null;
-    $scope.resetListScroll = 0;
-    //$scope.listActiveIndex = null;       
-
     
     var regex;
     $scope.$watch('search', function (value) {
@@ -41,24 +62,32 @@ app.controller('IntegratorsController', ['$scope', '$stateParams', '$location', 
         }
     };
 
-    $scope.showDetails = function (id) {          
+    $scope.showDetails = function (id, index) {     
+        console.log('index = ' + index);
+        $scope.scrollToIndex = index;
         $scope.activeId = id;
+        $scope.resetListScroll = new Date().getTime();
         $location.path('integradores/' + id);
     };
     
+    $scope.selectListItem = function (id) {
+        $scope.activeId = id;
+        $scope.resetListScroll = new Date().getTime(); // Mudar o valor para acionar o $watch(reset) da directive "auto-scroll"
+        $location.path('integradores/' + id);
+    }
+
+                                             
     $scope.refreshList = function () {
         $scope.search = '';
         $scope.searchString = null;
         $scope.activeId = null;
         $scope.selected = null;
         $location.path('integradores');
-        $scope.resetListScroll = $scope.resetListScroll == 0 ? 1 : 0;
+        $scope.resetListScroll = $scope.resetListScroll == 0 ? -1 : 0; // Mudar o valor para acionar o $watch(reset) da directive "auto-scroll"
     };
     
     $scope.new = function () {
-        //console.log('new');
-        $scope.refresh();
-        $scope.activeId = null;
+        $scope.refreshList();
         $location.path('integradores/novo');
     };
     
@@ -67,25 +96,40 @@ app.controller('IntegratorsController', ['$scope', '$stateParams', '$location', 
     };
 
     $scope.save = function() {
-        $scope.selected = angular.copy($scope.editIntegrator)
-        //$location.path('integradores/' + id);
-        //IntegratorsService.save($scope.selected);
-        $scope.readOnly = true;
-        //$scope.activeId = $scope.selected.id;
-        //$location.path('integradores/' + $scope.selected.id);
-        //$scope.integrators = IntegratorsService.list();
-        var arr = $scope.integrators;
-        for (var i = 0; i < arr.length; i++) {
-            if ($scope.integrators[i].id == $scope.editIntegrator.id) {
-                $scope.integrators[i] = $scope.editIntegrator;
+        console.log('$scope.editIntegrator.id = ' + $scope.editIntegrator.id)
+        if (!$scope.readOnly) {
+            $scope.selected = angular.copy($scope.editIntegrator)
+            $scope.readOnly = true;
+            if ($scope.editIntegrator.id) {
+                for (var i = 0; i < $scope.integrators.length; i++) {
+                    if ($scope.integrators[i].id == $scope.editIntegrator.id) {
+                        $scope.integrators[i] = $scope.editIntegrator;
+                        break;
+                    }
+                } 
+            } else {
+                var tmpId = 0;
+                for (var i = 0; i < $scope.integrators.length; i++) {
+                    if ($scope.integrators[i].id > tmpId) {
+                        tmpId = $scope.integrators[i].id
+                    }
+                }
+                tmpId++;
+                $scope.editIntegrator.id = tmpId;
+                $scope.integrators.push($scope.editIntegrator);
+                $scope.activeId = $scope.editIntegrator.id;
+                $scope.searchString = $scope.editIntegrator.name;
+                $location.path('integradores/' + tmpId);
             }
+        } else {
+            console.log('Nada foi alterado.')
         }        
     };
                                              
     $scope.refreshDetail = function (id) {
-        $scope.selected = IntegratorsService.find($stateParams.id);
-        $scope.detailSubtitle = $scope.selected ? $scope.selected.name : null;
-        $scope.readOnly = true;    
+        $location.path('integradores/' + id);
+        $scope.editIntegrator = angular.copy($scope.selected);
+        $scope.readOnly = true;
     };
     
 }]);
@@ -255,12 +299,6 @@ app.factory('IntegratorsService', function () {
             return _.find(integrators, function (integrator) {
                 return integrator.id == id;
             });
-        },
-        save: function (integrator)  {
-            var old = _.find(integrators, function (integrator) {
-                return integrator.id == integrator.id;
-            });
-            old = integrator;
         }
     }
 });

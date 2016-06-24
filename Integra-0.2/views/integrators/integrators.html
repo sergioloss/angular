@@ -36,7 +36,8 @@
                     <md-list-item ng-repeat="integrator in integrators | filter:filterBySearch" 
                                   class="md-2-line" 
                                   ng-class="{ 'nav-active': integrator.id == activeId }"                                  
-                                  ng-click="showDetails(integrator.id)"
+                                  ng-click="showDetails(integrator.id, $index)"
+                                  index="{{ $index }}"
                                   >
                         <div class="md-list-item-text" layout="column">
                             <h3><span>id:&nbsp;</span><b>{{ integrator.id }}</b></h3>
