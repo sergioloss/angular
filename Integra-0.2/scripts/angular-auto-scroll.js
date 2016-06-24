@@ -1,10 +1,10 @@
-angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $location, $anchorScroll) {
+angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $location) {
     return {
         restrict: 'A',
         scope: {
             autoScrollOptions: '=autoScroll'
         },
-        link: function($scope, element, attributes, $index) {
+        link: function($scope, element, attributes) {
             var watch = $scope.autoScrollOptions.watch;
             var reset = $scope.autoScrollOptions.reset;
             var scrollToSelectedClassName = $scope.autoScrollOptions.scrollToSelectedClassName;
@@ -14,91 +14,61 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $lo
             //var scrollPosition = getScrollPosition();
             var selectedScrollPosition = 0;
             
-            var animateCrollDuration = 250; // milliseconds: 1000 = 1s
+            var animateCrollDuration = 100; // milliseconds: 1000 = 1s
             
             //console.log('oooooooo');
             $scope.$parent.$watch(watch, function(newValue, oldValue) {
-            
-                //console.log('watch = ' + newValue);
-                scrollTo(el, 0, animateCrollDuration);
-                
-                scrollPosition = getScrollPosition();
                 /*
-                var $scrollTo = el.getElementsByClassName(scrollToSelectedClassName);
-                if ($scrollTo.length)
-                {
-                    var childs = el.getElementsByTagName('md-list-item')
-                    var h = 0;
-
-                    if (childs.length) {
-                        for (i = 0; i < childs.length; i++) {
-                            if (childs[i].attributes['class'].value.indexOf(scrollToSelectedClassName) > -1) {
-                                break;
-                            }
-                            h += childs[i].clientHeight;
-                        }                    
-                    };
-                    //console.log('h = ' + h)
-                    scrollPosition = h;
-                }
-                */
-
+                console.log('auto-scroll watch');
                 if (!newValue) {
-                    //el.scrollTop = scrollPosition;     
+                    scrollPosition = getScrollPosition(-1);
                     scrollTo(el, scrollPosition, animateCrollDuration);
                 }
-                
+                */
             })
             
             $scope.$parent.$watch(reset, function(newValue, oldValue) {
-                
-                scrollPosition = getScrollPosition();
-                /*
-                var $scrollTo = el.getElementsByClassName(scrollToSelectedClassName);
-                if ($scrollTo.length)
-                {
-                    var childs = el.getElementsByTagName('md-list-item')
-                    var h = 0;
-
-                    if (childs.length) {
-                        for (i = 0; i < childs.length; i++) {
-                            if (childs[i].attributes['class'].value.indexOf(scrollToSelectedClassName) > -1) {
-                                break;
-                            }
-                            h += childs[i].clientHeight;
-                        }                    
-                    };
-                    //console.log('h = ' + h)
-                    scrollPosition = h;
-                }
-                */
-                
-                if (newValue != oldValue) {
-                    if (newValue < 1) {
-                        scrollTo(el, 0, animateCrollDuration);
-                    } else {
-                        scrollTo(el, scrollPosition, animateCrollDuration);
-                    }                    
+                console.log('auto-scroll reset');
+                if (newValue != oldValue || !oldValue) {
+                    //scrollPosition = getScrollPosition(newValue);
+                    scrollPosition = getScrollPosition(-1);
+                    scrollTo(el, scrollPosition, animateCrollDuration);
                 }
             })
             
-            function getScrollPosition() {
-                var index = $scope.$parent.scrollToIndex;
-                console.log('$scope.$parent.scrollToIndex = ' + $scope.$parent.scrollToIndex);
+            
+            function getScrollPosition(index) {
+                //var index = $scope.$parent.scrollToIndex;
+                //console.log('$scope.$parent.scrollToIndex = ' + $scope.$parent.scrollToIndex);
                 var scrollPosition = 0;
                 var childs = el.getElementsByTagName('md-list-item')
                 var h = 0;
                 var i = 0
 
-                if (childs.length) {
-                    for (i = 0; i < childs.length; i++) {
-                        if (childs[i].attributes['index'].value == index) {
-                            break;
+                if (childs.length) {                    
+                    if (index > -1) {
+                        console.log('index = ' + index);
+                        for (i = 0; i < childs.length; i++) {
+                            if (childs[i].attributes['index'].value == index) {
+                                break;
+                            }
+                            h += childs[i].clientHeight;
+                        }                    
+                    } else {
+                        var $scrollTo = el.getElementsByClassName(scrollToSelectedClassName);
+                        if ($scrollTo.length)
+                        {
+                            for (i = 0; i < childs.length; i++) {
+                                //console.log('scrollToSelectedClassName = ' + scrollToSelectedClassName);
+                                if (childs[i].attributes['class'].value.indexOf(scrollToSelectedClassName) > -1) {
+                                    console.log('achou');
+                                    break;
+                                }
+                                h += childs[i].clientHeight;
+                            }
                         }
-                        h += childs[i].clientHeight;
-                    }                    
+                    }
                 };
-                //console.log('i = ' + i + ' - ' + new Date().getTime());
                 scrollPosition = h;
                 return scrollPosition;
             };

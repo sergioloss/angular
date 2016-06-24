@@ -29,13 +29,14 @@
                     </div>
                 </div>
             </md-toolbar>
-            <md-content class="scroll-container" layout="column" 
+            <md-content class="scroll-container" 
+                        layout="column" 
                         auto-scroll="{scrollToSelectedClassName: 'nav-active', watch: 'searchString', reset: 'resetListScroll'}">
                 <md-list flex>
                     <md-subheader class="md-sticky" style="background-color: #ccd8ff;"><b>{{ searchString ? 'Resultado da busca por "' + searchString + '"' : 'Lista completa'}}</b></md-subheader>
                     <md-list-item ng-repeat="integrator in integrators | filter:filterBySearch" 
                                   class="md-2-line" 
-                                  ng-class="{ 'nav-active': integrator.id == activeId }"                                  
+                                  ng-class="{ 'nav-active': integrator.id == activeId }"    
                                   ng-click="showDetails(integrator.id, $index)"
                                   index="{{ $index }}"
                                   >
