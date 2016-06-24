@@ -1,6 +1,14 @@
 'use strict';
 
-var app = angular.module('Integra-0.1', ['ui.router', 'ngMaterial', 'ngMessages', 'ngStorage', 'ngMockE2E', 'auto-scroll']);
+var app = angular.module('Integra-0.1', [
+    'ui.router', 
+    'ngMaterial', 
+    'ngMessages', 
+    'ngStorage', 
+    'ngMockE2E', 
+    'ui.grid',
+    'auto-scroll'
+]);
 app.run(run);
 
 app.config([

@@ -12,7 +12,8 @@
     </div>
 </md-toolbar>
 <md-content layout="column"  class="md-padding">
-    <form name="form" novalidate class="css-form"  ng-class="{ formEditMode : !readOnly }" layout="column">
+    <form name="form" novalidate class="md-padding"  ng-class="{ formEditMode : !readOnly }" layout="column">
+        <h3>Dados cadastrais</h3>
         <div layout="row">
             <md-input-container>
                 <label>id:</label>
@@ -30,7 +31,10 @@
             <label>Descri&ccedil;&atilde;o:</label>
             <textarea name="description" ng-model="editIntegrator.description" ng-readonly="readOnly"></textarea>
         </md-input-container>
-        <h3> Contatos</h3>
+        <h3>Contatos</h3>
+        <div>
+            <div ui-grid="{ data: editIntegrator.contacts }" class="integratorsContactsGrid"></div>
+        </div>
         
     </form>
 </md-content>

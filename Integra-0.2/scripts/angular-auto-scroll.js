@@ -5,67 +5,37 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $lo
             autoScrollOptions: '=autoScroll'
         },
         link: function($scope, element, attributes) {
-            var watch = $scope.autoScrollOptions.watch;
             var reset = $scope.autoScrollOptions.reset;
             var scrollToSelectedClassName = $scope.autoScrollOptions.scrollToSelectedClassName;
             
             var el = angular.element(element)[0];
             var scrollPosition = 0;
-            //var scrollPosition = getScrollPosition();
             var selectedScrollPosition = 0;
             
             var animateCrollDuration = 100; // milliseconds: 1000 = 1s
             
-            //console.log('oooooooo');
-            $scope.$parent.$watch(watch, function(newValue, oldValue) {
-                /*
-                console.log('auto-scroll watch');
-                if (!newValue) {
-                    scrollPosition = getScrollPosition(-1);
-                    scrollTo(el, scrollPosition, animateCrollDuration);
-                }
-                */
-            })
-            
             $scope.$parent.$watch(reset, function(newValue, oldValue) {
-                console.log('auto-scroll reset');
                 if (newValue != oldValue || !oldValue) {
-                    //scrollPosition = getScrollPosition(newValue);
-                    scrollPosition = getScrollPosition(-1);
+                    scrollPosition = getScrollPosition();
                     scrollTo(el, scrollPosition, animateCrollDuration);
                 }
-            })
+            })            
             
-            
-            function getScrollPosition(index) {
-                //var index = $scope.$parent.scrollToIndex;
-                //console.log('$scope.$parent.scrollToIndex = ' + $scope.$parent.scrollToIndex);
+            function getScrollPosition() {
                 var scrollPosition = 0;
                 var childs = el.getElementsByTagName('md-list-item')
                 var h = 0;
                 var i = 0
 
                 if (childs.length) {                    
-                    if (index > -1) {
-                        console.log('index = ' + index);
+                    var $scrollTo = el.getElementsByClassName(scrollToSelectedClassName);
+                    if ($scrollTo.length)
+                    {
                         for (i = 0; i < childs.length; i++) {
-                            if (childs[i].attributes['index'].value == index) {
+                            if (childs[i].attributes['class'].value.indexOf(scrollToSelectedClassName) > -1) {
                                 break;
                             }
                             h += childs[i].clientHeight;
-                        }                    
-                    } else {
-                        var $scrollTo = el.getElementsByClassName(scrollToSelectedClassName);
-                        if ($scrollTo.length)
-                        {
-                            for (i = 0; i < childs.length; i++) {
-                                //console.log('scrollToSelectedClassName = ' + scrollToSelectedClassName);
-                                if (childs[i].attributes['class'].value.indexOf(scrollToSelectedClassName) > -1) {
-                                    console.log('achou');
-                                    break;
-                                }
-                                h += childs[i].clientHeight;
-                            }
                         }
                     }
                 };
@@ -90,7 +60,6 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $lo
                             h += childs[i].clientHeight;
                         }                    
                     };
-                    //console.log('i = ' + i + ' - ' + new Date().getTime());
                     scrollPosition = h;
                 }
                 return scrollPosition;
