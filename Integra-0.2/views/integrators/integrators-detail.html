@@ -11,8 +11,8 @@
         </div>
     </div>
 </md-toolbar>
-<md-content layout="column"  class="md-padding">
-    <form name="form" novalidate class="md-padding"  ng-class="{ formEditMode : !readOnly }" layout="column">
+<md-content layout="column"  class="md-padding" style="height: 100%;">
+    <form name="form" id="form" novalidate class="md-padding"  ng-class="{ formEditMode : !readOnly }" layout="column">
         <h3>Dados cadastrais</h3>
         <div layout="row">
             <md-input-container>
@@ -31,47 +31,94 @@
             <label>Descri&ccedil;&atilde;o:</label>
             <textarea name="description" ng-model="editIntegrator.description" ng-readonly="readOnly"></textarea>
         </md-input-container>
-        <h3>Contatos</h3>
-        <div>
-            <div ui-grid="{ data: editIntegrator.contacts }" class="integratorsContactsGrid"></div>
+        <div layout="row" style="vertical-align: middle;">
+            <h3>
+                Contatos&nbsp;
+                <i class="material-icons" 
+                   style="cursor: pointer; vertical-align: middle;" 
+                   ng-click="createNewContact()" 
+                   alt="Novo Contato" 
+                   title="Novo Contato" 
+                   >
+                    add_circle
+                </i>
+                <i class="material-icons" 
+                   style="cursor: pointer; vertical-align: middle; width: 22px;" 
+                   ng-click="resetNewContact()" 
+                   alt="Cancelar" 
+                   title="Cancelar" 
+                   ng-show="newContactFlag"
+                   >
+                    cancell
+                </i>
+                <i class="material-icons" 
+                   style="cursor: pointer; vertical-align: middle; width: 22px;" 
+                   ng-click="form.$valid && insertNewContact()" 
+                   alt="Concluir" 
+                   title="Concluir" 
+                   ng-show="newContactFlag"
+                   >
+                    check_circle
+                </i>                
+            </h3>
         </div>
-        
+        <md-content class="scroll-container"                    
+                    style="width: 100%;"
+                    layout="column"                    
+                    >
+            <div layout="row" ng-show="newContactFlag" style="width: 99%;" class="formEditMode">
+                <md-input-container style="width: 110px;">
+                    <label>id:</label>
+                    <input type="text" name="contact_id" value="******" readonly />
+                </md-input-container>
+                <md-input-container flex>
+                    <label>Nome:</label>
+                    <input type="text" name="contact_name" id="contact_name" ng-model="newContact.name" ng-required="{{ !newContact.name }}" />
+                    <div ng-messages="form.contact_name.$error">                     
+                        <div ng-message="required">Campo obrigatório.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex>
+                    <label>E-mail:</label>
+                    <input type="email" name="contact_email" ng-model="newContact.email" ng-required="{{ !newContact.email }}" />
+                    <div ng-messages="form.contact_email.$error">                     
+                        <div ng-message="required">Campo obrigatório.</div>
+                        <div ng-message="email">E-mail inv&aacute;lido.</div>
+                    </div>
+                </md-input-container>
+            </div>
+            <md-list flex ng-class="{ formEditMode : !readOnly }">
+                <md-list-item ng-repeat="contact in editIntegrator.contacts" 
+                              class="md-1-line" 
+                              >
+                    <div layout="row">
+                        <md-input-container style="width: 110px;">
+                            <label>id:</label>
+                            <input type="text" name="contact_id_{{$index}}" ng-model="contact.id" readonly />
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>Nome:</label>
+                            <input type="text" name="contact_name_{{ contact.id }}" ng-model="contact.name" required ng-readonly="$parent.readOnly"/>
+                            <div ng-messages="form['contact_name_' + contact.id].$error">                     
+                                <div ng-message="required">Campo obrigatório.</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>E-mail:</label>
+                            <input type="text" name="contact_email_{{ contact.id }}" ng-model="contact.email" required ng-readonly="$parent.readOnly"/>
+                            <div ng-messages="form['contact_email_' + contact.id ].$error">                
+                                <div ng-message="required">Campo obrigatório.</div>
+                            </div>
+                        </md-input-container>
+                        <!--
+                        <div>
+                            <i class="material-icons" style="cursor: pointer;" ng-click="editContact(contact.id)">edit</i>
+                            <i class="material-icons" style="cursor: pointer;" ng-click="save()">save</i>
+                        </div>
+                        -->
+                    </div>
+                </md-list-item>
+            </md-list>
+        </md-content>
     </form>
 </md-content>
-
-<md-content layout="column">
-    <table>
-        <tbody>
-            <tr>
-                <td><b>id:&nbsp;</b></td>
-                <td>{{ selected.id }}</td>
-            </tr>
-            <tr>
-                <td><b>Nome:&nbsp;</b></td>
-                <td>{{ selected.name }}</td>
-            </tr>
-            <tr>
-                <td><b>Descri&ccedil;&atilde;o:&nbsp;</b></td>
-                <td>{{ selected.description }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h3>Contatos</h3>
-    <td>
-        <table>
-            <thead>
-                <th>Nome</th>
-                <th>Email</th>
-            </thead>
-            <tbody>
-                <tr ng-repeat="contact in selected.contacts">
-                    <td>{{ contact.name }}</td>
-                    <td>{{ contact.email }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </td>
-</md-content>
-
-

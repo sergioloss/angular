@@ -12,7 +12,7 @@ angular.module('auto-scroll', []).directive('autoScroll', function($timeout, $lo
             var scrollPosition = 0;
             var selectedScrollPosition = 0;
             
-            var animateCrollDuration = 100; // milliseconds: 1000 = 1s
+            var animateCrollDuration = 200; // milliseconds: 1000 = 1s
             
             $scope.$parent.$watch(reset, function(newValue, oldValue) {
                 if (newValue != oldValue || !oldValue) {

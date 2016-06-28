@@ -5,13 +5,15 @@ app.controller('IntegratorsController', [
     '$stateParams',
     '$location',
     '$timeout',
+    '$compile',
     'IntegratorsService',
     'Page',
-    function ($scope, $stateParams, $location, $timeout, IntegratorsService, Page) {
+    function ($scope, $stateParams, $location, $timeout, $compile, IntegratorsService, Page) {
         //console.log('IntegratorsController');
         
         Page.SetTitle('Integradores');
         $scope.integrators = IntegratorsService.list();
+        $scope.newContactFlag = false;
         
         if ($stateParams.id == 'novo') {
             $scope.search = '';
@@ -55,7 +57,7 @@ app.controller('IntegratorsController', [
             $scope.activeId = id;
             $location.path('integradores/' + id);
             
-            $scope.resetListScroll();
+            //$scope.resetListScroll();
         };
         
         $scope.refreshList = function () {
@@ -89,15 +91,47 @@ app.controller('IntegratorsController', [
             $scope.refreshList();
             $location.path('integradores/novo');
         };
+        
+        $scope.createNewContact = function () {
+            $scope.newContactFlag = true;
+        };
+        
+        $scope.insertNewContact = function () {
+            var newContactId = 0;
+            if ($scope.editIntegrator.contacts.length) {
+                for (var i = 0; i < $scope.editIntegrator.contacts.length; i++) {
+                    if ($scope.editIntegrator.contacts[i].id > i) {
+                        newContactId = $scope.editIntegrator.contacts[i].id;
+                    }
+                }
+            }
+            newContactId++;
+            $scope.newContact = {id: newContactId, name: $scope.newContact.name, email: $scope.newContact.email };
+            $scope.editIntegrator.contacts.push($scope.newContact);
+            
+            $timeout( function () {
+                $scope.resetNewContact();
+            });
+            
+            /*
+            $timeout( function () {
+                //$scope.form.$setPristine();                
+                $scope.form.$setPristine();
+                $scope.form.$setUntouched();
+                //$scope.form.contact_email.$setValidity();
+            });
+            */
+        };
     
-        $scope.edit = function () {  
+        $scope.edit = function () {
             $scope.readOnly = false;
         };
 
         $scope.save = function() {
             // console.log('$scope.editIntegrator.id = ' + $scope.editIntegrator.id)
-            if (!$scope.readOnly) {
+            if (!$scope.readOnly || $scope.newContact) {
                 $scope.readOnly = true;
+                
                 var id = $scope.editIntegrator.id;
                 
                 if (id) { // UPDATE
@@ -135,8 +169,22 @@ app.controller('IntegratorsController', [
             $location.path('integradores/' + id);
             $scope.editIntegrator = angular.copy($scope.selected);
             $scope.readOnly = true;
+            $scope.resetNewContact();
         };
 
+        $scope.resetNewContact = function () {
+            $scope.newContactDefault = {
+                name: "",
+                email: ""
+            };
+            $scope.newContact = angular.copy($scope.newContactDefault);   
+            
+            $scope.form.$setPristine();
+            $scope.form.$setUntouched();
+            $scope.newContactFlag = false;
+
+        };
+        
 }]);
 
 /*

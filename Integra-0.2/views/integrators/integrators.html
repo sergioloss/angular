@@ -24,14 +24,15 @@
                     </h3>
                     <span flex></span>
                     <div>
-                        <i class="material-icons" style="cursor: pointer;" ng-click="refreshList()">refresh</i>
-                        <i class="material-icons" style="cursor: pointer;" ng-click="new()">add_circle</i>
+                        <i class="material-icons" style="cursor: pointer;" ng-click="refreshList()" alt="Atualizar">refresh</i>
+                        <i class="material-icons" style="cursor: pointer;" ng-click="new()" alt="Inserir">add_circle</i>
                     </div>
                 </div>
             </md-toolbar>
             <md-content class="scroll-container" 
                         layout="column" 
-                        auto-scroll="{scrollToSelectedClassName: 'nav-active', reset: 'resetListScrollFlag'}">
+                        auto-scroll="{scrollToSelectedClassName: 'nav-active', reset: 'resetListScrollFlag'}"
+                        >
                 <md-list flex>
                     <md-subheader class="md-sticky" style="background-color: #ccd8ff;"><b>{{ searchString ? 'Resultado da busca por "' + searchString + '"' : 'Lista completa'}}</b></md-subheader>
                     <md-list-item ng-repeat="integrator in integrators | filter:filterBySearch" 
