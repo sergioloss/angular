@@ -3,10 +3,19 @@
         <h2 class="md-toolbar-tools"><span>Integradores</span></h2>
     </md-toolbar>
     <md-content layout="search" class="md-padding">
-        <md-input-container flex  style="background-color: antiquewhite;">
-            <label>Buscar...</label>
-            <input type="text" ng-model="search" input-clear="red">
-        </md-input-container>    
+        <div layout="row" flex="100" layout-align="left center" style="background-color: antiquewhite;">
+            <md-input-container style="width: 98%;">
+                <label>Buscar...</label>
+                <!--
+                <input type="text" ng-model="search" input-clear="red">
+                -->
+                <input type="text" ng-model="search">
+            </md-input-container>    
+            <span flex></span>
+            <div flex="" style="margin-left: -35px;">
+                <i class="material-icons" style="cursor: pointer; color: red;" ng-click="search = ''" alt="Atualizar" ng-show="search">clear</i>
+            </div>
+        </div>
     </md-content>
     <md-content layout="row" 
          class="md-padding" 

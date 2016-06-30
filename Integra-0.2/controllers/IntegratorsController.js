@@ -5,20 +5,22 @@ app.controller('IntegratorsController', [
     '$stateParams',
     '$location',
     '$timeout',
-    '$compile',
+    '$mdDialog',
     'IntegratorsService',
     'Page',
-    function ($scope, $stateParams, $location, $timeout, $compile, IntegratorsService, Page) {
+    function ($scope, $stateParams, $location, $timeout, $mdDialog, IntegratorsService, Page) {
         //console.log('IntegratorsController');
         
         Page.SetTitle('Integradores');
         $scope.integrators = IntegratorsService.list();
         $scope.newContactFlag = false;
+        $scope.defaultForm = { id: null, name: "", description: "", contacts: [] };
+        $scope.editIntegrator = angular.copy($scope.defaultForm);
         
         if ($stateParams.id == 'novo') {
             $scope.search = '';
             $scope.searchString = null;    
-            $scope.selected = {};
+            $scope.selected = {};            
             $scope.detailSubtitle = 'Incluir Novo Integrador';
             $scope.readOnly = false;
             $scope.activeId = null;
@@ -30,10 +32,14 @@ app.controller('IntegratorsController', [
                 $scope.editIntegrator = angular.copy(selected);
                 $scope.detailSubtitle = selected.name;
                 $scope.readOnly = true; 
-
-                $scope.selectListItem(selected.id);
+                
+                $scope.selectListItem(selected.id);                
+                
+                $scope.contactsOrderBy('name', false);
             }
         }       
+        
+        
                                              
         var regex;
         $scope.$watch('search', function (value) {
@@ -48,15 +54,17 @@ app.controller('IntegratorsController', [
         
         $scope.selectListItem = function (id) {
             $scope.activeId = id;
-            $location.path('integradores/' + id);
             
-            $scope.resetListScroll();
+            if ($scope.autoScrollIntegratorsList == false) {
+                $scope.resetListScroll();
+            };
+            $scope.autoScrollIntegratorsList = false;
         };
         
         $scope.showDetails = function (id) {     
             $scope.activeId = id;
             $location.path('integradores/' + id);
-            
+            $scope.autoScrollIntegratorsList = true;
             //$scope.resetListScroll();
         };
         
@@ -89,14 +97,69 @@ app.controller('IntegratorsController', [
     
         $scope.new = function () {
             $scope.refreshList();
+            $scope.editIntegrator = angular.copy($scope.defaultForm);
+            //console.log('$scope.form = ' + $scope.form);
             $location.path('integradores/novo');
+            /*
+            $timeout(function () {
+                $scope.form.name.$touched = false;
+                $scope.form.name.$error.required = false;
+                $scope.resetNewContact();
+            });
+            */
         };
         
         $scope.createNewContact = function () {
             $scope.newContactFlag = true;
+            $scope.newContactDefault = {
+                name: "",
+                email: ""
+            };
+            $scope.newContact = angular.copy($scope.newContactDefault);
+        };
+        
+        $scope.editContact = function (contact) {
+            $scope.idContactEdit = contact.id;
+            $scope.editingContact = angular.copy(contact);
+        };
+        
+        $scope.undoContact = function (contactId) {
+            $scope.idContactEdit = -1;
+            for (var i = 0; i < $scope.editIntegrator.contacts.length; i++) {
+                if ($scope.editIntegrator.contacts[i].id == contactId) {
+                    $scope.editIntegrator.contacts[i] = angular.copy($scope.editingContact);
+                    $scope.editingContact = {};
+                    break;
+                };
+            };
+        };        
+        
+        $scope.removeContact = function (integratorId, contactId, event) {            
+            //console.log('removeContact'); 
+            var confirm = $mdDialog.confirm()
+                .title('Deseja excluir este contato?')
+                .textContent('O contato será removido definitivamente.')
+                .ariaLabel('Excluir contato')
+                .targetEvent(event)
+                .ok('OK')
+                .cancel('Cancelar');
+            
+            $mdDialog.show(confirm).then(function() {
+                //console.log('Sim');
+                IntegratorsService.removeContact(integratorId, contactId);
+                $scope.refreshDetail(integratorId);
+            }, function() {
+                //console.log('Não');
+            });            
         };
         
         $scope.insertNewContact = function () {
+            if (!$scope.newContact.name || !$scope.newContact.email) {
+                //console.log('form error');  
+                $scope.form.contact_name.$touched = true;
+                $scope.form.contact_email.$touched = true;
+                return false;
+            };
             var newContactId = 0;
             if ($scope.editIntegrator.contacts.length) {
                 for (var i = 0; i < $scope.editIntegrator.contacts.length; i++) {
@@ -106,21 +169,22 @@ app.controller('IntegratorsController', [
                 }
             }
             newContactId++;
-            $scope.newContact = {id: newContactId, name: $scope.newContact.name, email: $scope.newContact.email };
-            $scope.editIntegrator.contacts.push($scope.newContact);
+            var newContact = {id: newContactId, name: $scope.newContact.name, email: $scope.newContact.email };
+            $scope.editIntegrator.contacts.push(newContact);
             
-            $timeout( function () {
-                $scope.resetNewContact();
-            });
-            
+            $scope.resetNewContact();
+            $scope.contactsOrderBy($scope.orderContactsBy);
             /*
-            $timeout( function () {
-                //$scope.form.$setPristine();                
-                $scope.form.$setPristine();
-                $scope.form.$setUntouched();
-                //$scope.form.contact_email.$setValidity();
-            });
+            if ($scope.editIntegrator.id > 0) {
+                $scope.save();
+            };
             */
+            return true;
+        };
+        
+        $scope.saveContact = function (contact) {
+            $scope.save();
+            $scope.contactsOrderBy($scope.orderContactsBy, true);
         };
     
         $scope.edit = function () {
@@ -128,10 +192,21 @@ app.controller('IntegratorsController', [
         };
 
         $scope.save = function() {
-            // console.log('$scope.editIntegrator.id = ' + $scope.editIntegrator.id)
-            if (!$scope.readOnly || $scope.newContact) {
-                $scope.readOnly = true;
+            if (!$scope.readOnly || $scope.newContactFlag || $scope.idContactEdit > -1) {
+                if ($scope.newContactFlag) {
+                    if (!$scope.insertNewContact()) {
+                        return false;
+                    };
+                };
                 
+                if (!$scope.editIntegrator.name && !$scope.editIntegrator.id) {
+                    $scope.form.name.$touched = true;
+                    return;
+                };
+                
+                $scope.readOnly = true;
+                $scope.idContactEdit = -1;
+
                 var id = $scope.editIntegrator.id;
                 
                 if (id) { // UPDATE
@@ -161,31 +236,100 @@ app.controller('IntegratorsController', [
                     $scope.resetListScroll();
                 }
             } else {
-                console.log('Nada foi alterado.')
+                console.log('Nada foi alterado.');
             }        
         };
                                              
         $scope.refreshDetail = function (id) {
-            $location.path('integradores/' + id);
-            $scope.editIntegrator = angular.copy($scope.selected);
-            $scope.readOnly = true;
+            if ($stateParams.id == 'novo' || !$scope.selected) {
+                //console.log('$stateParams.id = ' + $stateParams.id);
+                $scope.editIntegrator = angular.copy($scope.defaultForm);
+                $scope.form.name.$touched = false;
+                $scope.form.name.$error.required = false;
+            } else {
+                $scope.editIntegrator = angular.copy($scope.selected);
+                $scope.readOnly = true;
+                $location.path('integradores/' + id);
+            }
             $scope.resetNewContact();
+            $scope.idContactEdit = -1;
         };
 
         $scope.resetNewContact = function () {
+            
+            $scope.newContactFlag = false;
+
             $scope.newContactDefault = {
-                name: "",
-                email: ""
+                name: "name",
+                email: "mail@mail"
             };
             $scope.newContact = angular.copy($scope.newContactDefault);   
             
-            $scope.form.$setPristine();
-            $scope.form.$setUntouched();
-            $scope.newContactFlag = false;
+            $scope.form.contact_name.$setPristine();
+            $scope.form.contact_name.$setUntouched();
+            $scope.form.contact_email.$setPristine();
+            $scope.form.contact_email.$setUntouched();
 
         };
         
+        $scope.contactsOrderBy = function (orderFieldName, refreshCurrentOrder) {
+            $timeout(function () {
+                //$scope.orderContactsBy = orderFieldName;
+                //var desc = false;
+                if ($scope.orderContactsBy == orderFieldName) {
+                    $scope.orderContactsDesc = (!$scope.orderContactsDesc && !refreshCurrentOrder);
+                } else {
+                    $scope.orderContactsDesc = false;
+                    $scope.orderContactsBy = orderFieldName;
+                }
+                $scope.orderContactsByIdDesc = false;
+                $scope.orderContactsByNameDesc = false;
+                $scope.orderContactsByEmailDesc = false;
+                switch (orderFieldName) {
+                    case 'id':
+                        $scope.editIntegrator.contacts.sort(function (a, b) {
+                            if ($scope.orderContactsDesc) {
+                                $scope.orderContactsByIdDesc = true;
+                                return b.id - a.id;
+                            } else {
+                                $scope.orderContactsByIdDesc = false;
+                                return a.id - b.id;
+                            }
+                        });
+                        break;
+                    case 'name':
+                        $scope.editIntegrator.contacts.sort(function (a, b) {
+                            var A = a.name.toUpperCase(); // ignore upper and lowercase
+                            var B = b.name.toUpperCase(); // ignore upper and lowercase
+
+                            if ($scope.orderContactsDesc) {
+                                $scope.orderContactsByNameDesc = true;
+                                return B.localeCompare(A);
+                            } else {
+                                $scope.orderContactsByNameDesc = false;
+                                return A.localeCompare(B);
+                            }
+                        });
+                        break;
+                    case 'email':
+                        $scope.editIntegrator.contacts.sort(function (a, b) {
+                            var A = a.email.toUpperCase(); // ignore upper and lowercase
+                            var B = b.email.toUpperCase(); // ignore upper and lowercase
+
+                            if ($scope.orderContactsDesc) {
+                                $scope.orderContactsByEmailDesc = true;
+                                return B.localeCompare(A);
+                            } else {
+                                $scope.orderContactsByEmailDesc = false;
+                                return A.localeCompare(B);
+                            }
+                        });
+                        break;
+                }
+            });
+        };
 }]);
+
 
 /*
 app.controller('IntegratorsDetailController', ['$scope', '$stateParams', 'IntegratorsService', function ($scope, $stateParams, IntegratorsService) {
@@ -352,6 +496,22 @@ app.factory('IntegratorsService', function () {
             return _.find(integrators, function (integrator) {
                 return integrator.id == id;
             });
+        },
+        findContact: function (integratorId, contactId) {
+            var integrator = _.find(integrators, function (integrator) {
+                return integrator.id == integratorId;
+            });
+            return _.find(integrator.contacts, function (contact) {
+                return contact.id == contactId;
+            });            
+        },
+        removeContact: function (integratorId, contactId) {
+            var integrator = _.find(integrators, function (integrator) {
+                return integrator.id == integratorId;
+            });
+            var contact = this.findContact(integratorId, contactId);
+            var index = integrator.contacts.indexOf(contact);
+            integrator.contacts.remove(index);
         }
     }
 });

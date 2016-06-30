@@ -196,3 +196,28 @@ app.directive('inputClearNoMaterial', function () {
     };
 });
 
+app.directive('ngFocus', function($timeout) {
+    return {
+        link: function ( scope, element, attrs ) {
+            scope.$watch( attrs.ngFocus, function ( val ) {
+                if ( angular.isDefined( val ) && val ) {
+                    $timeout( function () { element[0].focus(); } );
+                }
+            }, true);
+            
+            element.bind('blur', function () {
+                if ( angular.isDefined( attrs.ngFocusLost ) ) {
+                    scope.$apply( attrs.ngFocusLost );
+                    
+                }
+            });
+        }
+    };
+});
+
+// Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function(from, to) {
+    var rest = this.slice((to || from) + 1 || this.length);
+    this.length = from < 0 ? this.length + from : from;
+    return this.push.apply(this, rest);
+};

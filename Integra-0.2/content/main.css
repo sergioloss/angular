@@ -103,9 +103,8 @@ Use of this source code is governed by an MIT-style license that can be in found
 }
 
 .stretch input  {
-  width: 100%
+  width: 100%;
 }
-
 
 /* ---------
  * Clear button for text box
@@ -128,7 +127,28 @@ Use of this source code is governed by an MIT-style license that can be in found
     background-color: antiquewhite;
 }
 
+.formContactEditMode {
+    background-color: #fff5e7;
+}
+
 .integratorsContactsGrid {
     width: 100%;
     height: 203px;
+}
+
+.orderByBar {
+    margin-top: 15px;
+    padding: 0 12px;
+}
+
+.orderByColumnHeader {
+    border-bottom: solid 2px #ddd;
+    margin: 0 2px;
+    background-color: #eFeFeF;
+}
+
+.oderedColumn {
+    color: #1ea0ff;
+    /*color: #f47a00;*/
+    background-color: #e0e0e0;
 }
