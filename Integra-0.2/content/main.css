@@ -64,6 +64,77 @@
     padding: 4px;
 }
 
+.searchBar {
+    background-color: antiquewhite; 
+    padding-left: 15px;
+}
+
+/* -----------------------------------------------------------------------------------------
+ * Para sobrescrever uma classe do angular-material.css:
+ * Utilizar a hierarquia do CSS colocando as novas classes vinculadas ao id da tag container
+ * Ex.: #content .teste-class { color: red; }
+ * */
+
+#content .md-padding {
+    padding: 5px;
+}
+
+@media (min-width: 960px) {
+    #content .md-padding {
+    padding: 10px; } 
+}
+
+#content .md-toolbar {
+    min-height: 50px; 
+}
+
+#content .md-toolbar-tools {
+    height: 50px;
+    padding: 0 10px;
+}
+
+#content .md-subheader {
+    background-color: #ccd8ff;  
+    min-height: 25px;
+    height: 38px;
+}
+
+#content ._md-subheader-inner {
+    padding: 11px;
+}
+
+#content .md-2-line {
+    min-height: 45px;
+}
+
+#content .md-2-line ._md-no-style {
+    min-height: 45px;    
+}
+
+/*
+ * Para alterar a altura (height) dos ítens de um "md-list-item"
+ *
+ * */
+
+        #content md-list-item.md-2-line
+        , #content md-list-item.md-2-line > ._md-no-style {
+            height: auto;
+            min-height: 60px; 
+        }
+
+        #content md-list-item.md-2-line div.md-button:first-child::before
+        , #content md-list-item.md-2-line > ._md-no-style div.md-button:first-child::before {
+            content: '';
+            min-height: 60px;
+            visibility: hidden;
+            display: inline-block; 
+        }
+
+
+/* 
+ * https://github.com/angular/material/issues/7277
+ * mdList: how to make md-list-item item row height smaller
+ * */
 
 /* ---------
  * Login view

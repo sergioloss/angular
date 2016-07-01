@@ -49,7 +49,7 @@ app.controller('IntegratorsController', [
                                                                                               
         $scope.filterBySearch = function(integrator) {
             if (!$scope.search) return true;
-            return regex.test(integrator.name);
+            return (regex.test(integrator.id) || regex.test(integrator.name));
         };
         
         $scope.selectListItem = function (id) {

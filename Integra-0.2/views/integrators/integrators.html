@@ -1,9 +1,9 @@
 <div layout="column" layout-align="left left" class="md-whiteframe-z1">
-    <md-toolbar>
+    <md-toolbar class="md-toolbar">
         <h2 class="md-toolbar-tools"><span>Integradores</span></h2>
     </md-toolbar>
     <md-content layout="search" class="md-padding">
-        <div layout="row" flex="100" layout-align="left center" style="background-color: antiquewhite;">
+        <div layout="row" flex="100" layout-align="left center" class="searchBar">
             <md-input-container style="width: 98%;">
                 <label>Buscar...</label>
                 <!--
@@ -43,7 +43,7 @@
                         auto-scroll="{scrollToSelectedClassName: 'nav-active', reset: 'resetListScrollFlag'}"
                         >
                 <md-list flex>
-                    <md-subheader class="md-sticky" style="background-color: #ccd8ff;"><b>{{ searchString ? 'Resultado da busca por "' + searchString + '"' : 'Lista completa'}}</b></md-subheader>
+                    <md-subheader class="md-sticky md-subheader"><b>{{ search ? 'Resultado da busca por "' + search + '"' : 'Lista completa'}}</b></md-subheader>
                     <md-list-item ng-repeat="integrator in integrators | filter:filterBySearch" 
                                   class="md-2-line" 
                                   ng-class="{ 'nav-active': integrator.id == activeId }"    
@@ -54,6 +54,7 @@
                             <h3><span>id:&nbsp;</span><b>{{ integrator.id }}</b></h3>
                             <h4><span>Nome:&nbsp;</span><b>{{ integrator.name }}</b></h4>
                         </div>
+                        <md-divider ng-if="!$last"></md-divider>
                     </md-list-item>
                 </md-list>
             </md-content>                
